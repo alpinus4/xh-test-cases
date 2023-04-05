@@ -1,6 +1,7 @@
 import unittest
 import subprocess
 import json
+import os.path
 
 # docker run -p 80:80 kennethreitz/httpbin
 class TestHttpRequests(unittest.TestCase):
@@ -20,6 +21,13 @@ class TestHttpRequests(unittest.TestCase):
 
         self.assertEqual(response["args"]["id"], '5')
         self.assertEqual(data_response["name"], "jan")
+
+    def test_download(self):
+        file_name = "res.json"
+        subprocess.getoutput(f"xh -d httpbin.org/json -o {file_name}")
+        file_exists = os.path.isfile(file_name)
+        os.remove(file_name)
+        self.assertTrue(file_exists)
         
 
 if __name__ == "__main__":
