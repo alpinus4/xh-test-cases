@@ -1,23 +1,27 @@
 #!/bin/bash
 
-TEMP_INSTALLATION_DIR=tmp-install
-HOME_DIR=$(pwd)
+echo "Installing xh..."
+echo "executing 'cargo install xh'"
+cargo install xh
+INSTALLATION_RETURN_CODE=$?
 
-mkdir $TEMP_INSTALLATION_DIR
-if [ -d "$TEMP_INSTALLATION_DIR" ]; then
-    echo "Created temporary installation dir"
-fi
-
-cd $TEMP_INSTALLATION_DIR
-echo "Install to: $(pwd)"
-curl -sfL https://raw.githubusercontent.com/ducaale/xh/master/install.sh | sh
-
-if [ -f "xh" ] && [ -f "xhs" ]; then
-    echo -e "\n\ninstallation works properly"
+if [ $INSTALLATION_RETURN_CODE -eq 0 ]; then
+    echo "Installation has succeded"
 else
-    echo -e "installation doesn't work"
+    echo "Installation has failed"
+    exit 1
 fi
 
+echo "Uninstalling xh..."
+echo "executing 'cargo uninstall'"
+cargo uninstall xh
+UNINSTALLATION_RETURN_CODE=$?
 
-cd $HOME_DIR
-rm -rf $TEMP_INSTALLATION_DIR
+if [ $UNINSTALLATION_RETURN_CODE -eq 0 ]; then
+    echo "Uninstallation has succeded"
+else
+    echo "Uninstallation has failed"
+    exit 1
+fi
+
+exit 0
